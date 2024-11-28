@@ -1,0 +1,5 @@
+class AddCompanyRefToEmployeeInfos < ActiveRecord::Migration[8.0]
+  def change
+    add_reference :employee_infos, :company, null: false, foreign_key: true
+  end
+end
