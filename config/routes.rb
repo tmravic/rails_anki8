@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   root "pages#home"
   get "pages/home"
+  post "pages/live_update", to: "pages#live_update", as: :live_update
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

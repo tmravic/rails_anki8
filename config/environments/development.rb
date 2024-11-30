@@ -55,6 +55,20 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
+  # Log tags for ActionCable to differentiate in logs
+  config.action_cable.log_tags = [
+    ->(_request) { "ActionCable" }, # Accepts a request object but doesn't use it
+    ->(_request) { Time.now.in_time_zone("Asia/Tokyo") }   # Adds a timestamp to the logs
+  ]
+
+
+  # Enable detailed logging for SolidCable
+  ActiveSupport::Notifications.subscribe("solid_cable.message.created") do |*args|
+    event = ActiveSupport::Notifications::Event.new(*args)
+    Rails.logger.info("[SolidCable] Message created - Channel: #{event.payload[:channel]}, Payload: #{event.payload[:payload]}")
+  end
+
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

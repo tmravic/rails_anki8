@@ -15,6 +15,10 @@
     You have successfully authenticated with your Devise account.
     You are now ready to interact with this application.
   </p>
+  <h1>Notification Broadcast Test</h1>
+
+  <%= button_to "Trigger Live Update", live_update_path, method: :post, class: "btn btn-primary" %>
+
   <%= link_to "Sign Out", session_path, 'data-turbo-method': :delete %>
 <% else %>
   <p>You are not signed in.</p>
