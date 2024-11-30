@@ -17,11 +17,14 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   primary:
     <<: *default
     database: rails_anki8_development
+  queue:
+    <<: *default
+    database: rails_anki8_development_queue
+    migrations_paths: db/queue_migrate
   cable:
     <<: *default
     database: rails_anki8_development_cable

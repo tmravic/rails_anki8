@@ -10,4 +10,8 @@ class PagesController < ApplicationController
       format.turbo_stream # To support Turbo if you're using it
     end
   end
+
+  def import
+    ImportJob.perform_later
+  end
 end
