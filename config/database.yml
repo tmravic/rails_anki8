@@ -88,8 +88,8 @@ production:
   primary: &primary_production
     <<: *default
     database: rails_anki8_production
-    username: rails_anki8
-    password: <%= ENV["RAILS_ANKI8_DATABASE_PASSWORD"] %>
+    username: taylor
+    password: <%= ENV["RAILS_ANKI8_DATABASE_PASSWORD"] || 123456 %>
   cache:
     <<: *primary_production
     database: rails_anki8_production_cache
