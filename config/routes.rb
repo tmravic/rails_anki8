@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      resources :actresses
       # The route is api/v1/items but the db table is products
       resources :products, path: :items
     end
