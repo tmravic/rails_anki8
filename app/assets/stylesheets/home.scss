@@ -1,0 +1,14 @@
+.box {
+  border: 1px solid black;
+  width: 50%;
+  height: 20%;
+}
+
+div {
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+}

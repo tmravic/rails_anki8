@@ -18,7 +18,6 @@ module Authentication
     end
 
     def require_authentication
-      debugger
       resume_session || request_authentication
     end
 
