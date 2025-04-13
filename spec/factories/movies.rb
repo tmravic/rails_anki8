@@ -7,7 +7,7 @@ FactoryBot.define do
     end
 
     after(:create) do |movie, evaluator|
-      create(:actress, name: evaluator.actress_name, movies: [movie])
+      create(:actress, name: evaluator.actress_name, movies: [ movie ])
     end
   end
 end

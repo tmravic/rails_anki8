@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   describe 'roles' do
     it 'should have the correct roles' do
       expect(User.roles.keys).to contain_exactly('user', 'moderator', 'admin')

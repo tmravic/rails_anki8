@@ -47,7 +47,7 @@ RingCard.create([
   { user: users.third, ring_number: '5678' }
 ])
 
-categories = Category.create([{ name: 'Clothing' }, { name: 'Electronics' }])
+categories = Category.create([ { name: 'Clothing' }, { name: 'Electronics' } ])
 
 clothing_category = Category.find_by(name: 'Clothing')
 electronics_category = Category.find_by(name: 'Electronics')

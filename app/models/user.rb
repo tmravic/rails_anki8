@@ -8,9 +8,9 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  enum :role, [:user, :moderator, :admin]
+  enum :role, [ :user, :moderator, :admin ]
 
-  after_initialize :set_default_role, :if => :new_record?
+  after_initialize :set_default_role, if: :new_record?
   before_save -> { puts "Before saving #{self}" }
 
   def set_default_role
