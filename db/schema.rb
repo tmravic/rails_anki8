@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_28_015522) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_16_090124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,6 +58,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_015522) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["actress_id"], name: "index_movies_on_actress_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.bigint "user_id"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -111,6 +120,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_015522) do
   add_foreign_key "employee_infos", "companies"
   add_foreign_key "employee_infos", "users"
   add_foreign_key "movies", "actresses"
+  add_foreign_key "posts", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "profiles", "employee_infos"
   add_foreign_key "ring_cards", "users", on_delete: :cascade
