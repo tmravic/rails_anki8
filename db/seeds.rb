@@ -79,3 +79,17 @@ movies = Movie.create([
   { id: 6, actress_id: 4, title: "県庁おもてなし課", year: 2013 },
   { id: 7, actress_id: 5, title: "真夏の方程式", year: 2013 }
 ])
+
+# Creating 10 seed posts
+Post.create([
+  { title: 'First Post', user_id: users[0].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'Tech Trends', user_id: users[1].id, published: false, created_at: Time.now, updated_at: Time.now },
+  { title: 'Ruby Tips', user_id: users[2].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'Rails Guide', user_id: users[3].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'Coding Journey', user_id: users[4].id, published: false, created_at: Time.now, updated_at: Time.now },
+  { title: 'Web Dev Basics', user_id: users[0].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'API Design', user_id: users[1].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'Database Tips', user_id: users[2].id, published: false, created_at: Time.now, updated_at: Time.now },
+  { title: 'Frontend Fun', user_id: users[3].id, published: true, created_at: Time.now, updated_at: Time.now },
+  { title: 'Backend Basics', user_id: users[4].id, published: true, created_at: Time.now, updated_at: Time.now }
+])
