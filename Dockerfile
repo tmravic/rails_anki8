@@ -1,72 +1,57 @@
-# syntax=docker/dockerfile:1
-# check=error=true
+FROM ruby:3.3.6-slim
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t rails_anki8 .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name rails_anki8 rails_anki8
+# Install minimal dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    git \
+    apache2 \
+    apache2-dev \
+    libcurl4-openssl-dev \
+    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && npm install -g yarn \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
+# Install bundler and Passenger
+RUN gem install bundler -v 2.3.26 --no-document && \
+    gem install passenger -v 6.0.27 --no-document && \
+    passenger-install-apache2-module --auto
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=3.3.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+# Copy Apache configuration files
+COPY conf.d/passenger.conf /etc/apache2/mods-available/passenger.conf
+COPY conf.d/rails_anki8.conf /etc/apache2/sites-available/rails_anki8.conf
+COPY conf.d/apache2.conf /etc/apache2/apache2.conf
 
-# Rails app lives here
-WORKDIR /rails
+CMD ["bash"]
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# Install application gems
-COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
-
-# Copy application code
-COPY . .
-
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
-
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
-
-# Final stage for app image
-FROM base
-
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
-
-# Run and own only the runtime files as a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
-
-# Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
-
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+## Enable Apache modules and site
+#RUN a2enmod passenger rewrite && \
+#    a2ensite rails_anki8 && \
+#    a2dissite 000-default
+#
+## Set working directory and copy app
+#WORKDIR /myapp
+#COPY . .
+#
+## Install app dependencies
+#ENV BUNDLE_WITHOUT=development:test
+#RUN bundle install --without development test && \
+#    yarn install --production
+#
+## Precompile assets
+#ENV RAILS_ENV=production \
+#    SECRET_KEY_BASE=5db0e2382250d80ae1bc8767501d403ee4ce0ebd7d331d070ddd9306befd71d3ff531b75d04601c5fc2088a557635161133047c6ac23a3146cb898a9f8826e4b
+#RUN bundle exec rails assets:precompile
+#
+## Fix permissions for Apache user
+#RUN chown -R www-data:www-data /myapp && \
+#    chmod -R 755 /myapp
+#
+## Expose port
+#EXPOSE 80
+#
+## Start Apache
+#CMD ["apache2ctl", "-D", "FOREGROUND"]
