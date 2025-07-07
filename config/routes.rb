@@ -20,4 +20,6 @@ Rails.application.routes.draw do
       resources :products, path: :items
     end
   end
+
+  resources :cards
 end
