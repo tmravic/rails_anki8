@@ -61,14 +61,6 @@ Rails.application.configure do
     ->(_request) { Time.now.in_time_zone("Asia/Tokyo") }   # Adds a timestamp to the logs
   ]
 
-
-  # Enable detailed logging for SolidCable
-  ActiveSupport::Notifications.subscribe("solid_cable.message.created") do |*args|
-    event = ActiveSupport::Notifications::Event.new(*args)
-    Rails.logger.info("[SolidCable] Message created - Channel: #{event.payload[:channel]}, Payload: #{event.payload[:payload]}")
-  end
-
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
