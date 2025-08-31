@@ -79,8 +79,9 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
-  solid_queue_logger = ActiveSupport::Logger.new(Rails.root.join("log", "solid_queue.log"))
-  solid_queue_logger.formatter = Logger::Formatter.new
+  # solid_queue_logger = ActiveSupport::Logger.new(Rails.root.join("log", "solid_queue.log"))
+  solid_queue_logger = ActiveSupport::Logger.new(STDOUT)
+  # solid_queue_logger.formatter = Logger::Formatter.new
   solid_queue_logger.level = Logger::DEBUG
 
   # Assign the custom logger to SolidQueue
