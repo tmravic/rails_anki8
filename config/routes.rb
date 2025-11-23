@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/pool_stats', to: 'pages#pool_stats'
   resource :session
   resources :passwords, param: :token
   root "pages#home"
