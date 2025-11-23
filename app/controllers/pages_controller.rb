@@ -6,16 +6,18 @@ class PagesController < ApplicationController
   def live_update
     ActionCable.server.broadcast("notifications", { message: "Live update test!" })
     Thread.new do
-      # This checks out a connection and leases it to this thread
-      ActiveRecord::Base.connection.execute("SELECT 1")
-      # Hold the thread (and leased connection) for 10 minutes
+      ActiveRecord::Base.connection_pool.with_connection do
+        # .with_connection scopes the DB query to a block,
+        # checking out a connection only for its duration
+        # and automatically releasing it back to the pool afterward
+        # preventing long-term holds even if the Ruby thread continues (during sleep 600)
+        ActiveRecord::Base.connection.execute("SELECT 1")
+      end
+      ActiveRecord::Base.clear_active_connections!
+      # clear_active_connections! forcibly clears any lingering leases tied to the current thread
+      # ensuring no "dead" or orphaned connections remain after the block
+      # acting as an extra safety net for incomplete cleanups
       sleep 600
-      # The sleep 600 keeps the thread alive and running in Ruby for 10 minutes,
-      # so the lease isn't released until the thread fully terminates (exits)
-      # even though the query itself completes on the DB side quickly.
-      # During this time, the connection appears 'busy'
-      # (or potentially transitions to 'dead' if cleanup fails post-termination)
-      # in the app's pool stats, preventing reuse by other requests/threads.
     end
     respond_to do |format|
       format.html { redirect_to root_path, notice: "Live update broadcasted!" }
