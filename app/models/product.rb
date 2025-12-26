@@ -1,3 +1,14 @@
+#   create_table "products", force: :cascade do |t|
+#     t.string "name"
+#     t.string "sku"
+#     t.float "price"
+#     t.boolean "active", default: false
+#     t.bigint "category_id", null: false
+#     t.datetime "created_at", null: false
+#     t.datetime "updated_at", null: false
+#     t.index ["category_id"], name: "index_products_on_category_id"
+#   end
+
 class Product < ApplicationRecord
   belongs_to :category
 
