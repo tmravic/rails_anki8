@@ -55,7 +55,7 @@ electronics_category = Category.find_by(name: 'Electronics')
 Product.create([
  { name: 'Running Shoes', price: 50.00, category: clothing_category },
  { name: 'T-Shirt', price: 20.00, category: clothing_category },
- { name: 'Smartphone', price: 500.00, category: electronics_category },
+ { name: 'Smartphone', active: true, price: 500.00, category: electronics_category },
  { name: 'Laptop', price: 1000.00, category: electronics_category }
 ])
 
