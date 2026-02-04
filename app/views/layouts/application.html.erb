@@ -23,6 +23,7 @@
   </head>
 
   <body>
+    <script nonce="<%= content_security_policy_nonce %>">alert('Hello');</script>
     <%= yield %>
   </body>
 </html>
