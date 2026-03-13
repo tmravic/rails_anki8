@@ -1,0 +1,11 @@
+<div class="card">
+  <h6>Card Details</h6>
+  <p>
+    <strong>Card Number:</strong> <%= card.card_number %>
+  </p>
+  <% if card.user %>
+    <p>
+      <strong>Owner:</strong> <%= card.user.name || "Anonymous" %>
+    </p>
+  <% end %>
+</div>

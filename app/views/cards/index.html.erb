@@ -1,0 +1,9 @@
+<%= turbo_stream_from "cards" %>
+
+<div id="cards">
+  <% if @cards %>
+    <% @cards.each do |card| %>
+      <%= render "card", card: card %>
+    <% end %>
+  <% end %>
+</div>

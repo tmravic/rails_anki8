@@ -8,4 +8,8 @@
 
 class Card < ApplicationRecord
   belongs_to :user, optional: true
+
+  after_create_commit -> {
+    broadcast_prepend_to "cards", partial: "cards/card", locals: { card: self }, target: "cards"
+  }
 end
