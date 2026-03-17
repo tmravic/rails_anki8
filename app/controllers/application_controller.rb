@@ -1,14 +1,21 @@
 class ApplicationController < ActionController::Base
-  include Authentication
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  # Only allow modern browsers...
   allow_browser versions: :modern
 
-  helper_method :current_user
+  # === Authlogic helpers ===
+  helper_method :current_user_session, :current_user
+
+  def current_user_session
+    @current_user_session ||= UserSession.find
+  end
 
   def current_user
-    @current_user ||= User.find(Current.session.user_id) if Current.session&.user_id
-    # if session = Session.find_by(id: cookies.signed[:session_id])
-    #   self.current_user = session.user
-    # end
+    @current_user ||= current_user_session&.user
+  end
+
+  def require_login
+    unless current_user
+      redirect_to new_user_session_path, alert: "Please log in to continue."
+    end
   end
 end

@@ -22,4 +22,5 @@ Rails.application.routes.draw do
   end
 
   resources :cards
+  resource :user_session, only: [:new, :create, :destroy]
 end
