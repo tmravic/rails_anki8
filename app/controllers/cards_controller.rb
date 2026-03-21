@@ -1,4 +1,6 @@
 class CardsController < ApplicationController
+  load_and_authorize_resource
+
   def new
     @card = Card.new
     @users = User.all
@@ -18,5 +20,11 @@ class CardsController < ApplicationController
 
   def card_params
     params.expect(card: [:card_number, :user_id])
+  end
+
+  def authorize_admin
+    authorize! :manage, Card
+    # if user.admin?
+    #   can :manage, :all
   end
 end
