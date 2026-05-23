@@ -63,6 +63,33 @@ RSpec.describe 'Authentication' do
     box = find('.box')
     File.binwrite("box_section.png", box.native.screenshot_as(:png))
 
+    # === JavaScript Dialog Testing ===
+    accept_alert do
+      sleep 1
+      click_button 'Show Alert'
+    end
+
+    accept_confirm do
+      sleep 1
+      click_button 'Show Confirm'
+    end
+
+    accept_prompt(with: 'Grok') do
+      sleep 1
+      click_button 'Show Prompt'
+    end
+
+    # === execute_script / evaluate_script examples ===
+    page.execute_script("console.log('Hello from Capybara execute_script')")
+
+    # Example: change background color via JS
+    page.execute_script("document.querySelector('.box').style.backgroundColor = '#e0f0ff'")
+
+    # Example: get a value back from the browser
+    box_count = page.evaluate_script("document.querySelectorAll('.box').length")
+    expect(box_count).to eq(1)
+
+    # === Sign out ===
     # click_link 'Sign Out'
     sign_out = find('a', text: 'Sign Out')
     sign_out.click

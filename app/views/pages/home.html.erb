@@ -23,6 +23,22 @@
 
   <%= button_to "Import Job", import_path, method: :post, class: "btn btn-primary" %>
 
+  <h1>JavaScript Dialog Test</h1>
+  <%= button_tag "Show Alert",
+                 type: "button",
+                 onclick: "alert('This is a native alert!')",
+                 class: "btn btn-secondary" %>
+
+  <%= button_tag "Show Confirm",
+                 type: "button",
+                 onclick: "if (confirm('Do you really want to do this?')) { console.log('User confirmed') }",
+                 class: "btn btn-secondary" %>
+
+  <%= button_tag "Show Prompt",
+                 type: "button",
+                 onclick: "const name = prompt('What is your name?', 'John'); if (name) console.log('User entered:', name)",
+                 class: "btn btn-secondary" %>
+
   <%= link_to "Sign Out", session_path, 'data-turbo-method': :delete %>
 <% else %>
   <p>You are not signed in.</p>
