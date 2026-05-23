@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rails_anki8_test
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  selenium:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    environment:
+      - SE_VNC_NO_PASSWORD=true
+    ports:
+      - "4444:4444"   # webdriver
+      - "7900:7900"   # noVNC viewer (open http://localhost:7900 in your browser to watch tests live)
+    depends_on:
+      - db
+
+  rspec:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID}      # ← passed from your shell / .env
+        GROUP_ID: ${GROUP_ID}
+        USERNAME: rails
+    volumes:
+      - .:/rails
+      - gem_cache:/usr/local/bundle
+    working_dir: /rails
+    environment:
+      - RAILS_ENV=test
+      - DATABASE_URL=postgres://postgres:password@db:5432/rails_anki8_test
+      - BUNDLE_WITHOUT=""
+    depends_on:
+      db:
+        condition: service_healthy
+      selenium:
+        condition: service_started
+    command: sleep infinity
+    tty: true
+    stdin_open: true
+
+volumes:
+  postgres_data:
+  gem_cache:

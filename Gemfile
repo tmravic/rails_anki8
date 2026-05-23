@@ -53,6 +53,10 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "capybara", "~> 3.40"
+  gem "selenium-webdriver"
+  gem "cgi"
+  gem "tsort"
 end
 
 group :development do
