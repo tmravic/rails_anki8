@@ -1,0 +1,29 @@
+john:
+  name: John Doe
+  email_address: john@company.com
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  role: 0
+
+jane:
+  name: Jane Smith
+  email_address: jane@company.com
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  role: 0
+
+bob:
+  name: Bob Johnson
+  email_address: bob@company.com
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  role: 0
+
+emily:
+  name: Emily Brown
+  email_address: emily@company.com
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  role: 0
+
+michael:
+  name: Michael Wilson
+  email_address: michael@company.com
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  role: 0

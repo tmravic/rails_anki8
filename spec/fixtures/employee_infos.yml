@@ -1,0 +1,24 @@
+first_info:
+  user: john
+  company: taylor_inc
+  department: Engineering
+
+second_info:
+  user: jane
+  company: taylor_inc
+  department: Marketing
+
+third_info:
+  user: bob
+  company: taylor_inc
+  department: Sales
+
+fourth_info:
+  user: jane
+  company: taylor_inc
+  department: HR
+
+fifth_info:
+  user: jane
+  company: taylor_inc
+  department: Finance

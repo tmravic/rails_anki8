@@ -1,0 +1,20 @@
+running_shoes:
+  name: Running Shoes
+  price: 50.00
+  category: clothing
+
+t_shirt:
+  name: T-Shirt
+  price: 20.00
+  category: clothing
+
+smartphone:
+  name: Smartphone
+  price: 500.00
+  active: true
+  category: electronics
+
+laptop:
+  name: Laptop
+  price: 1000.00
+  category: electronics

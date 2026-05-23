@@ -69,7 +69,7 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.define_derived_metadata(file_path: %r{/spec/system/}) do |metadata|
+  config.define_derived_metadata(file_path: Regexp.new('/spec/system/')) do |metadata|
     metadata[:type] = :system
   end
 

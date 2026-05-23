@@ -1,0 +1,24 @@
+john_profile:
+  external_link: 'https://johnsprofile.com'
+  date_of_birth: '1980-01-01'
+  employee_info: first_info
+
+jane_profile:
+  external_link: 'https://janesprofile.com'
+  date_of_birth: '1985-05-15'
+  employee_info: second_info
+
+bob_profile:
+  external_link: 'https://bobsprofile.com'
+  date_of_birth: '1990-07-30'
+  employee_info: third_info
+
+emily_profile:
+  external_link: 'https://emilysprofile.com'
+  date_of_birth: '1992-11-20'
+  employee_info: fourth_info
+
+michael_profile:
+  external_link: 'https://michaelsprofile.com'
+  date_of_birth: '1988-03-10'
+  employee_info: fifth_info

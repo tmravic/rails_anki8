@@ -1,0 +1,49 @@
+first_post:
+  title: First Post
+  user: john
+  published: true
+
+tech_trends:
+  title: Tech Trends
+  user: jane
+  published: false
+
+ruby_tips:
+  title: Ruby Tips
+  user: bob
+  published: true
+
+rails_guide:
+  title: Rails Guide
+  user: emily
+  published: true
+
+coding_journey:
+  title: Coding Journey
+  user: michael
+  published: false
+
+web_dev_basics:
+  title: Web Dev Basics
+  user: john
+  published: true
+
+api_design:
+  title: API Design
+  user: jane
+  published: true
+
+database_tips:
+  title: Database Tips
+  user: bob
+  published: false
+
+frontend_fun:
+  title: Frontend Fun
+  user: emily
+  published: true
+
+backend_basics:
+  title: Backend Basics
+  user: michael
+  published: true

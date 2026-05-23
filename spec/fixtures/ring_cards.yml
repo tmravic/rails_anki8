@@ -1,0 +1,7 @@
+john_ring_card:
+  user: john
+  ring_number: '1234'
+
+bob_ring_card:
+  user: bob
+  ring_number: '5678'

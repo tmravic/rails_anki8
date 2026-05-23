@@ -1,0 +1,19 @@
+john_card_1:
+  user: john
+  card_number: '1548'
+
+jane_card_1:
+  user: jane
+  card_number: '7370'
+
+bob_card_1:
+  user: bob
+  card_number: '6512'
+
+john_card_2:
+  user: john
+  card_number: '8912'
+
+jane_card_2:
+  user: jane
+  card_number: '4567'
