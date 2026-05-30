@@ -4,7 +4,9 @@
   height: 20%;
 }
 
-div {
+/* Only style the demo boxes inside .box.
+   A global 'div {}' rule was polluting mobile templates. */
+.box div {
   box-sizing: border-box;
   padding: 10px;
   margin: 5px;

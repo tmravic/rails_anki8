@@ -38,7 +38,7 @@
 
   <%= button_to "Import Job", import_path, method: :post, class: "btn btn-primary" %>
 
-  <%= link_to "Sign Out", session_path, 'data-turbo-method': :delete %>
+  <%= button_to "Sign Out", session_path, method: :delete, data: { turbo: false } %>
 <% else %>
   <p>You are not signed in.</p>
   <%= link_to "Sign up!", new_user_registration_path %>
