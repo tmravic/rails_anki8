@@ -78,4 +78,26 @@ class ApplicationController < ActionController::Base
   def select_layout
     "application"
   end
+
+  # Override the method that decides whether to switch the request format
+  # to :mobile.
+  #
+  # The default implementation in mobile-fu is good, but the company version
+  # also treats tablets as mobile and has better nil safety.
+  def set_mobile_format
+    if !mobile_exempt? && is_mobile_device? && !request.xhr?
+      request.format = :mobile unless session[:mobile_view] == false
+      session[:mobile_view] = true if session[:mobile_view].nil?
+    elsif !mobile_exempt? && is_tablet_device? && !request.xhr?
+      request.format = :mobile unless session[:mobile_view] == false
+      session[:mobile_view] = true if session[:mobile_view].nil?
+    end
+  end
+
+  # Defensive version of the method the gem uses internally.
+  # The original gem could crash with nil.to_sym on some actions.
+  def mobile_exempt?
+    return false if params[:action].nil?
+    self.class.instance_variable_get("@mobile_exempt_actions").try(:include?, params[:action].to_sym)
+  end
 end
