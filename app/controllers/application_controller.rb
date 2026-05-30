@@ -12,6 +12,11 @@ class ApplicationController < ActionController::Base
   # We will later override set_mobile_format to get more control.
   has_mobile_fu(true)
 
+  # Use a dynamic layout.
+  # The company application chooses different layouts depending on whether
+  # the user is on a mobile device and which part of the site they are in.
+  layout :select_layout
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -61,5 +66,16 @@ class ApplicationController < ActionController::Base
     pc_style     = (pc_style_str == "1")
 
     (is_mobile_device? || is_tablet_device?) && !pc_style
+  end
+
+  # This is the method referenced by `layout :select_layout` above.
+  #
+  # In the real company application this returns "mobile" or "user"
+  # (or sometimes "user_simply" for the login screen).
+  #
+  # For now we always return "application" so we don't break anything.
+  # We will create proper mobile and user layouts in later steps.
+  def select_layout
+    "application"
   end
 end
