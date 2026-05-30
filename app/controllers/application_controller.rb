@@ -76,7 +76,13 @@ class ApplicationController < ActionController::Base
   # For now we always return "application" so we don't break anything.
   # We will create proper mobile and user layouts in later steps.
   def select_layout
-    "application"
+    if use_mobile_view?
+      "mobile"
+    elsif controller_name == "sessions" && action_name == "new"
+      "user_simply"
+    else
+      "user"
+    end
   end
 
   # Override the method that decides whether to switch the request format
