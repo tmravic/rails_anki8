@@ -23,4 +23,43 @@ class ApplicationController < ActionController::Base
     #   self.current_user = session.user
     # end
   end
+
+  # --- Mobile view switching (company pattern) ---
+
+  # This before_action reads the pc_style parameter and sets a cookie.
+  # The custom is_mobile_device? in custom_mobilefu.rb reads this cookie.
+  before_action :set_mobile_view
+
+  # after_action is used in the real app to clean up after a special
+  # diagnostic page. We keep it here for fidelity with the company code.
+  after_action :clear_mobile_view
+
+  helper_method :use_mobile_view?
+
+  # Handles ?pc_style=0 and ?pc_style=1 parameters.
+  # This is how users in the real application can force mobile or desktop
+  # rendering regardless of their actual device.
+  def set_mobile_view
+    if params[:pc_style] == "1"
+      cookies[:pc_style] = "1"
+    elsif params[:pc_style] == "0"
+      cookies[:pc_style] = "0"
+    end
+
+    session[:mobile_view] = use_mobile_view?
+  end
+
+  def clear_mobile_view
+    # No-op in this simplified version.
+    # The real application uses this to restore state after visiting
+    # a special "about environment" diagnostic page.
+  end
+
+  # The central decision method used throughout the company application.
+  def use_mobile_view?
+    pc_style_str = cookies[:pc_style].to_s
+    pc_style     = (pc_style_str == "1")
+
+    (is_mobile_device? || is_tablet_device?) && !pc_style
+  end
 end
