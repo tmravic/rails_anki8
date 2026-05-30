@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rails Anki8 (Mobile)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body style="background: #f8f1f1;">
+  <div style="background:#c0392b;color:white;padding:6px 12px;font-weight:bold;">
+    📱 mobile.mobile.erb — This file is used when request.format == :mobile
+  </div>
+
+  <div style="padding: 12px;">
+    <%= yield %>
+  </div>
+
+  <div style="margin-top: 40px; font-size: 12px; color: #666; padding: 10px;">
+    This layout was chosen because <code>select_layout</code> returned "mobile"
+    <strong>and</strong> the current request format was <code>:mobile</code>.
+  </div>
+</body>
+</html>
