@@ -19,6 +19,12 @@ gem "dartsass-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# mobile-fu is a gem that detects mobile devices based on the User-Agent header.
+# It automatically includes helper methods (is_mobile_device?, mobile_device, etc.)
+# and can switch the request format to :mobile for mobile clients.
+# We are adding it to replicate a pattern used in a larger production Rails app.
+gem "mobile-fu", "~> 1.4"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
