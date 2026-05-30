@@ -4,6 +4,21 @@
       </script>
   <% end %>
 
+<%# ========================================================================== %>
+<%# MOBILE DETECTION DEBUG (added as part of mobile-fu tutorial)             %>
+<%# ========================================================================== %>
+<p style="background: #f0f0f0; padding: 8px; border-left: 4px solid #666;">
+  <strong>Mobile Detection (mobile-fu):</strong><br>
+  <% if is_mobile_device? %>
+    📱 <strong>is_mobile_device?</strong> returned truthy<br>
+    mobile_device = <%= mobile_device.inspect %><br>
+    <small>Try emulating a phone in DevTools and refreshing. Also try adding ?pc_style=1 to the URL.</small>
+  <% else %>
+    🖥️ Desktop / non-mobile view
+  <% end %>
+</p>
+<%# ========================================================================== %>
+
 <% if current_user %>
   <p>Hello <%= current_user.email_address %>! </p>
   <p>You are a [<%= current_user.role %>]</p>
