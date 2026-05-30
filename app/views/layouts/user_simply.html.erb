@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Rails Anki8</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body style="background:#f5f5f5; font-family: system-ui;">
+  <div style="max-width: 420px; margin: 80px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+    <h2 style="text-align:center; margin-bottom: 24px;">Rails Anki8</h2>
+    <%= yield %>
+    <p style="margin-top: 30px; font-size: 12px; color: #888; text-align: center;">
+      Using <code>user_simply.html.erb</code> (simple login layout)
+    </p>
+  </div>
+</body>
+</html>
