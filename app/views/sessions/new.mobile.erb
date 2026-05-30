@@ -1,0 +1,8 @@
+<%# This template is rendered when request.format == :mobile %>
+<%# For now we just delegate to the normal HTML template so the app
+    doesn't crash with a 406 error.
+
+    In a real application you would usually have mobile-optimized
+    markup here (or a completely different structure).
+%>
+<%= render template: "sessions/new", formats: [:html] %>

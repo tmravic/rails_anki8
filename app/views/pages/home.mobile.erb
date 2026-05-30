@@ -1,0 +1,12 @@
+<h1>Mobile Home</h1>
+
+<p>This page is being rendered from <code>home.mobile.erb</code> because
+<code>request.format</code> is currently <code>:mobile</code>.</p>
+
+<% if is_mobile_device? %>
+  <div style="background:#d4edda; padding:10px; border:1px solid #28a745;">
+    Mobile device detected via our custom <code>is_mobile_device?</code>
+  </div>
+<% end %>
+
+<%= render template: "pages/home", formats: [:html] %>
