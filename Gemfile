@@ -65,3 +65,5 @@ gem "tsort"
 gem "cgi"
 
 # comment
+
+gem "paranoia", "~> 3.1"
