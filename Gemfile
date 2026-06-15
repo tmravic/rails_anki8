@@ -58,6 +58,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Profile memory usage [https://github.com/SamSaffron/memory_profiler]
+  gem "memory_profiler"
 end
 
 gem "active_model_serializers", "~> 0.10.15"
