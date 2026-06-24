@@ -20,6 +20,15 @@
     <%= form.collection_select :user_id, @users, :id, :name, prompt: "Select a user" %>
   </div>
 
+  <div class="field">
+    <%= form.label :image, "Image" %>
+    <%= form.file_field :image %>
+  </div>
+
+  <% if @card.image.attached? %>
+    <%= image_tag @card.image.variant(:thumb) %>
+  <% end %>
+
   <div class="actions">
     <%= form.submit %>
   </div>

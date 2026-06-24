@@ -63,5 +63,6 @@ end
 gem "active_model_serializers", "~> 0.10.15"
 gem "tsort"
 gem "cgi"
-
+gem "image_processing", "~> 1.14"
+gem "aws-sdk-s3", "~> 1.213"
 # comment

@@ -87,4 +87,5 @@ Rails.application.configure do
   # Assign the custom logger to SolidQueue
   config.solid_queue.logger = solid_queue_logger
   config.solid_queue.silence_polling = true
+  config.active_storage.service = :amazon
 end
