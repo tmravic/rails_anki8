@@ -65,3 +65,5 @@ gem "tsort"
 gem "cgi"
 
 # comment
+
+gem "request_store", "~> 1.7"

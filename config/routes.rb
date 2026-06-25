@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   root "pages#home"
+  get "request_store_demo", to: "request_store_demo#show"
   get "pages/home"
   post "pages/live_update", to: "pages#live_update", as: :live_update
   post "pages/import", to: "pages#import", as: :import
