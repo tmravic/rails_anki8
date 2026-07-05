@@ -24,6 +24,8 @@ module Authentication
 
     def resume_session
       Current.session ||= find_session_by_cookie
+      binding.break # 1) Current just set from cookie —
+      # try: Current.session, Current.user, Thread.current.object_id
     end
 
     def find_session_by_cookie
@@ -44,6 +46,7 @@ module Authentication
     def start_new_session_for(user)
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
+        binding.break # 3) Current.session assigned on login — compare to resume_session above
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
       end
     end
