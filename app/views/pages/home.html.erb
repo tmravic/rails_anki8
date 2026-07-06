@@ -22,7 +22,7 @@
   <h1>Import Job</h1>
 
   <%= button_to "Import Job", import_path, method: :post, class: "btn btn-primary" %>
-
+  <%= link_to "Download PDF", generate_pdf_path(format: :pdf) %>
   <%= link_to "Sign Out", session_path, 'data-turbo-method': :delete %>
 <% else %>
   <p>You are not signed in.</p>

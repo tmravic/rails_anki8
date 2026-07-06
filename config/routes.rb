@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/generate_pdf', to: 'pdf_generator#generate'
   resource :session
   resources :passwords, param: :token
   root "pages#home"

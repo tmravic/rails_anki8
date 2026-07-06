@@ -65,3 +65,8 @@ gem "tsort"
 gem "cgi"
 
 # comment
+
+gem "matrix"
+gem "prawn", "~> 2.4"
+
+gem "prawn-table", "~> 0.2.2"
