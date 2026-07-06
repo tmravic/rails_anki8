@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "pages/home"
   post "pages/live_update", to: "pages#live_update", as: :live_update
   post "pages/import", to: "pages#import", as: :import
+  get "pages/frame_demo", to: "pages#frame_demo", as: :frame_demo
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

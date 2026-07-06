@@ -14,4 +14,8 @@ class PagesController < ApplicationController
   def import
     ImportJob.perform_later
   end
+
+  def frame_demo
+    @loaded_at = Time.current.strftime("%H:%M:%S.%L")
+  end
 end

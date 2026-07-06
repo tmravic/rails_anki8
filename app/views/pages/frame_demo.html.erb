@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "demo_frame" do %>
+  <p>Frame content loaded at <strong><%= @loaded_at %></strong></p>
+  <%= link_to "Reload frame (no full-page visit)", frame_demo_path(t: Time.current.to_i), data: { turbo_frame: "demo_frame" } %>
+<% end %>

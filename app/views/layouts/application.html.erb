@@ -24,10 +24,54 @@
 
   <body>
     <aside id="turbo-demo">
-      <p><strong>Turbo vs DOMContentLoaded</strong></p>
-      <p><code>turbo:load</code> fired: <strong id="turbo-load-count">0</strong> times (recolors .box)</p>
-      <p><code>DOMContentLoaded</code> fired: <strong id="dom-content-loaded-count">0</strong> times</p>
-      <p>Click a link — Turbo skips a full reload, so only <code>turbo:load</code> increments. Hard-refresh (F5) and both increment.</p>
+      <p><strong>Turbo lifecycle demo</strong> — watch the log + browser console</p>
+
+      <table class="turbo-event-table">
+        <thead>
+          <tr><th>Event</th><th>Count</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DOMContentLoaded</code></td>
+            <td data-event-count="DOMContentLoaded">0</td>
+            <td>Full page load only — JS context created once</td>
+          </tr>
+          <tr>
+            <td><code>turbo:before-cache</code></td>
+            <td data-event-count="turbo:before-cache">0</td>
+            <td>Leaving a page — Turbo snapshots it for back-button restore</td>
+          </tr>
+          <tr>
+            <td><code>turbo:before-render</code></td>
+            <td data-event-count="turbo:before-render">0</td>
+            <td>New HTML fetched — about to replace &lt;body&gt;</td>
+          </tr>
+          <tr>
+            <td><code>turbo:render</code></td>
+            <td data-event-count="turbo:render">0</td>
+            <td>New &lt;body&gt; inserted into the DOM</td>
+          </tr>
+          <tr>
+            <td><code>turbo:load</code></td>
+            <td data-event-count="turbo:load">0</td>
+            <td>Page ready — recolors .box below</td>
+          </tr>
+          <tr>
+            <td><code>turbo:frame-render</code></td>
+            <td data-event-count="turbo:frame-render">0</td>
+            <td>A &lt;turbo-frame&gt; updated (partial navigation)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Typical link-click order:</strong>
+        <code>before-cache</code> → <code>before-render</code> → <code>render</code> → <code>load</code>
+        → <code>frame-render</code> (lazy frame below loads after)
+      </p>
+
+      <p><strong>Event log</strong> (newest first):</p>
+      <ol id="turbo-event-log" reversed></ol>
+
       <nav>
         <%= link_to "Home", root_path %> |
         <%= link_to "New card", new_card_path %>
@@ -37,6 +81,12 @@
         <div>Two</div>
         <div>Three</div>
       </div>
+
+      <h3>Turbo Frame</h3>
+      <p>Lazy-loads after each visit; click "Reload frame" for frame-only navigation.</p>
+      <%= turbo_frame_tag "demo_frame", src: frame_demo_path, loading: :lazy do %>
+        <em>Frame loading…</em>
+      <% end %>
     </aside>
 
     <%= yield %>
