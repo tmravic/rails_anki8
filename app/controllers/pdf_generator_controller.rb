@@ -51,6 +51,74 @@ class PdfGeneratorController < ApplicationController
           pdf.stroke_bounds
         end
 
+        pdf.move_down 50
+
+        # Add the shipper box example
+        # Adjusted y to pdf.cursor (344.5119 here) for dynamic positioning
+        pdf.bounding_box([26, pdf.cursor], width: 271, height: 77) do
+          pdf.font('Helvetica', size: 8) # Using built-in font; replace with 'NotoSans' if fonts are set up
+
+          # Precompute min heights (add cell padding buffer)
+          # This calculates the minimum height needed for each row's text using pdf.height_of,
+          # which measures the rendered height of the string at the given font size.
+          # We add padding (e.g., +8 for ~4 top/bottom) to ensure space around the text and prevent tight fitting.
+          label_text = "Shipper"
+          # pdf.height_of(label_text, size: 8) == 9.248
+          label_min_height = pdf.height_of(label_text, size: 8) + 8
+          # +top/bottom padding ~4 each makes label_min_height == 17.2479
+
+          name_text = "HBL Shipper Name (Lookup D)"
+          name_min_height = pdf.height_of(name_text, size: 8) + 8
+          # Same as above, name_min_height == 17.2479
+
+          # Small buffer to prevent overflow
+          # This ensures the total row heights fit within the bounding box height by subtractng a small buffer (e.g., -2)
+          # to account for any minor rendering discrepencies or rounding errors.
+          info_min_height = pdf.bounds.height - label_min_height - name_min_height - 2
+          # pdf.bounds.height == 77, height set for the bounding box
+          # 77 - 17.2479 - 17.2479 -2 (for a bit of padding)
+          # info_min_height == 40.504
+
+          # Define the table data as a 2D array: each sub-array is a row with one cell (single column table).
+          table_data = [
+            [label_text],
+            [name_text],
+            ["HBL Shipper Info"] # truncates if multi-line exceeds remaining box space
+          ]
+
+          # Set column widths to match the full available width of the bounding box,
+          # ensuring the table spans the entire width without margins.
+          available_width = pdf.bounds.width # 271
+          col_widths = [available_width] # [271]
+
+          # Ensure starting exactly at box top
+          # pdf.move_cursor_to resets the cursor to the top of the current bounding box,
+          # guaranteeing the table starts right at the top edge without unwanted spacing.
+          pdf.move_cursor_to pdf.bounds.top # 77.0
+
+          # Create the table with the data and configurations.
+          # pdf.table handles layout, rendering cells in a grid. Here it's a 3-row, 1-column table
+          # acting like stacked "rows" with custom backgrounds, mimicking nested boxes but with less code
+          pdf.table(table_data, column_widths: col_widths) do |table|
+            # Access and style the table's cells globally:
+            table.cells.borders = [] # Remove all cell borders for a clean, borderless look
+            table.cells.padding = [4, 3] # Set padding: [top/bottom, left/right] for space inside cells
+            table.cells.align = :left # Horizontal text alignment within cells
+            table.cells.valign = :top # Vertical text alignment (stick to top of cell)
+            table.cells.overflow = :truncate # Clip text if it exceeds cell height instead of expanding or erroring
+
+            # Row-specific styles:
+            # table.row(N) targets individual rows (0-based index) for custom backgrounds and fixed heights
+            # Background colors use hex codes; heights use precomputed mins to control exact sizing.
+            table.row(0).background_color = 'add8e6' # Blue for label row
+            table.row(0).height = label_min_height # Fixed to min height (prevents auto-expansion)
+            table.row(1).background_color = '90ee90' # Green for name row
+            table.row(1).height = name_min_height # Fixed min
+            table.row(2).background_color = 'ffb6c1' # Red for info row, fixed to remaining space
+            table.row(2).height = info_min_height # Ensures it fills the rest without overflow
+          end
+        end
+
         # Send the PDF as a response.
         # send_data streams the PDF to the browser.
         send_data pdf.render, filename: "sample.pdf", type: "application/pdf", disposition: "inline"
