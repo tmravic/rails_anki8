@@ -23,6 +23,22 @@
   </head>
 
   <body>
+    <aside id="turbo-demo">
+      <p><strong>Turbo vs DOMContentLoaded</strong></p>
+      <p><code>turbo:load</code> fired: <strong id="turbo-load-count">0</strong> times (recolors .box)</p>
+      <p><code>DOMContentLoaded</code> fired: <strong id="dom-content-loaded-count">0</strong> times</p>
+      <p>Click a link — Turbo skips a full reload, so only <code>turbo:load</code> increments. Hard-refresh (F5) and both increment.</p>
+      <nav>
+        <%= link_to "Home", root_path %> |
+        <%= link_to "New card", new_card_path %>
+      </nav>
+      <div class="box">
+        <div>One</div>
+        <div>Two</div>
+        <div>Three</div>
+      </div>
+    </aside>
+
     <%= yield %>
   </body>
 </html>
