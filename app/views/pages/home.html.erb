@@ -11,8 +11,9 @@
   <% if current_user.admin? %>
       There are <%= User.count %> users
     <% end %>
-  <span class="home__status">
-    You have successfully authenticated.
+  <span class="home__status home__status--split">
+    <span>You have successfully authenticated.</span>
+    <span>You are now ready to interact with this application.</span>
   </span>
   <h1>Notification Broadcast Test</h1>
 
