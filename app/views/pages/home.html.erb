@@ -11,10 +11,9 @@
   <% if current_user.admin? %>
       There are <%= User.count %> users
     <% end %>
-  <p>
+  <span class="home__status">
     You have successfully authenticated.
-    You are now ready to interact with this application.
-  </p>
+  </span>
   <h1>Notification Broadcast Test</h1>
 
   <%= button_to "Trigger Live Update", live_update_path, method: :post, class: "btn btn-primary" %>
