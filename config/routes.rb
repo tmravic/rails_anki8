@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cards, only: [:index] do
+  resources :cards, only: [:index], module: :deposits do
     collection do
       post 'add_card', to: 'cards#add_card'
       delete 'delete_card', to: 'cards#delete_card'
