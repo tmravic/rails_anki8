@@ -21,5 +21,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cards, only: [:index]
+  resources :cards, only: [:index] do
+    collection do
+      post 'add_card', to: 'cards#add_card'
+      delete 'delete_card', to: 'cards#delete_card'
+      post 'charge', to: 'cards#charge'
+    end
+  end
 end
