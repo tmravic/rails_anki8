@@ -21,5 +21,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cards
+  resources :cards, only: [:index]
 end
