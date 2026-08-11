@@ -1,0 +1,3 @@
+// Public API for this folder: re-export members for consumers of "foundation".
+// @forward does not emit CSS itself; it only exposes the forwarded module.
+@forward "colors";

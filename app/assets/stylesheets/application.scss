@@ -1,2 +1,10 @@
-// Sassy
+// Entry stylesheet. Prefer @use over @import.
+//
+// File structure for this demo:
+//   foundation/_colors.scss  — defines $brand
+//   foundation/_index.scss   — @forward "colors" (barrel / public API)
+//   home.scss                — @use "foundation" as *; uses $brand
+//   application.scss         — @use "home" (this file)
+//
+// @use "foundation" resolves to foundation/_index.scss.
 @use "home";

@@ -1,5 +1,9 @@
+// @use loads a module once. Members are namespaced unless you use `as *`.
+// Old @import was global, order-dependent, and could be included many times.
+@use "foundation" as *;
+
 .box {
-  border: 1px solid black;
+  border: 1px solid $brand;
   width: 50%;
   height: 20%;
 }
