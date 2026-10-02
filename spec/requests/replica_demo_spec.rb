@@ -36,6 +36,30 @@ RSpec.describe "Replica demo", type: :request do
     expect(sql_log).not_to include("INSERT")
   end
 
+  it "raises ReadOnlyError when a before_action writes during the GET" do
+    expect { get "/replica_demo", params: { mode: "before_action" } }.not_to change(Hit, :count)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("before_action")
+    expect(response.body).to include("ReadOnlyError")
+    expect(response.body).to include("INSERT")
+    expect(sql_log).not_to include("INSERT")
+  end
+
+  it "raises ReadOnlyError when a model callback writes during the GET" do
+    probe = Probe.create!(source: "seed")
+
+    expect { get "/replica_demo", params: { mode: "callback" } }.not_to change { probe.reload.lookups }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("after_find")
+    expect(response.body).to include("ReadOnlyError")
+    expect(response.body).to include("UPDATE")
+    expect(sql_log).to include("role=reading")
+    expect(sql_log).to include("SELECT")
+    expect(sql_log).not_to include("UPDATE")
+  end
+
   it "reads on the replica and writes on the primary when the statements are split" do
     expect { get "/replica_demo", params: { mode: "split" } }.to change(Hit, :count).by(1)
 

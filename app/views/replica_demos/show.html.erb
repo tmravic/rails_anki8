@@ -68,6 +68,8 @@
       <%= link_to "DatabaseSelector GET", replica_demo_path(mode: "selector") %>
       <%= button_to "POST, then selector GET", replica_demo_path, method: :post %>
       <%= link_to "Read on replica, write on primary", replica_demo_path(mode: "split") %>
+      <%= link_to "Write in a before_action", replica_demo_path(mode: "before_action") %>
+      <%= link_to "Write in a model callback", replica_demo_path(mode: "callback") %>
     </div>
   </section>
 
@@ -80,13 +82,20 @@
       <% else %>
         <p>No recent non-GET, so this GET used <code>:reading</code> with <code>prevent_writes</code> true. The count ran. The insert did not.</p>
       <% end %>
-      <% if @error %>
-        <p><strong>ReadOnlyError.</strong> <%= @error.message %></p>
-      <% end %>
+    <% elsif @mode == "before_action" %>
+      <p>The action only counts rows. <code>write_during_before_action</code> inserts a hit before the action runs. DatabaseSelector wraps that filter too, so the insert raises ReadOnlyError and the action never runs.</p>
+    <% elsif @mode == "callback" %>
+      <p>The action loads one <code>Probe</code>. <code>after_find :count_lookup</code> updates <code>lookups</code>. The load is a SELECT. The callback is an UPDATE, and that raises ReadOnlyError.</p>
     <% else %>
       <p>The count ran on <code>:reading</code>. The insert ran on <code>:writing</code>. That is the per-statement split replidog did, and what <code>read_from_replica</code> does for a heavy read that must not include the write.</p>
     <% end %>
-    <p>Rows visible to the read: <%= @read_count %>. <%= @saved ? "Saved hit #{@saved.id}." : "No hit saved." %></p>
+    <% if @error %>
+      <p><strong>ReadOnlyError.</strong> <%= @error.message %></p>
+    <% end %>
+    <p>
+      <% if @read_count %>Rows visible to the read: <%= @read_count %>. <% end %>
+      <%= @saved ? "Saved hit #{@saved.id}." : "No hit saved." %>
+    </p>
   </section>
 
   <section>
