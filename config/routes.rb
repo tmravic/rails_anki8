@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   root "pages#home"
+  get "replica_demo", to: "replica_demos#show"
+  post "replica_demo", to: "replica_demos#create"
   get "pages/home"
   post "pages/live_update", to: "pages#live_update", as: :live_update
   post "pages/import", to: "pages#import", as: :import
