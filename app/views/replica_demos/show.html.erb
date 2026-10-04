@@ -1,0 +1,105 @@
+<% content_for :title, "Replica demo" %>
+<style>
+  /* home.scss sets every div to 100px by 100px. Reset that for this page. */
+  .demo,
+  .demo div,
+  .demo section,
+  .demo form,
+  .demo ul,
+  .demo li,
+  .demo pre,
+  .demo p,
+  .demo h1,
+  .demo h2 {
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+  .demo {
+    width: min(46rem, calc(100% - 2rem));
+    margin: 2rem auto 3rem;
+    padding: 0 0.25rem;
+    font: 17px/1.55 ui-sans-serif, system-ui, sans-serif;
+    color: #1c1c1c;
+  }
+  .demo h1 { font-size: 1.8rem; line-height: 1.2; margin-bottom: 0.6rem; }
+  .demo h2 { font-size: 1.05rem; margin: 1.4rem 0 0.45rem; }
+  .demo p { margin: 0.6rem 0; }
+  .demo section { margin: 1.1rem 0; }
+  .demo .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+  .demo .actions a,
+  .demo .actions button {
+    font: inherit;
+    line-height: 1.3;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid #b9b9b9;
+    border-radius: 6px;
+    background: #fff;
+    color: #14315c;
+    text-decoration: none;
+  }
+  .demo .result,
+  .demo pre {
+    background: #f4f4f4;
+    padding: 0.9rem 1rem;
+    border-radius: 6px;
+  }
+  .demo .bad { background: #fde8e8; }
+  .demo pre { white-space: pre-wrap; word-break: break-word; }
+  .demo ul { margin: 0.3rem 0 0; padding-left: 1.25rem; }
+  .demo li { margin: 0.3rem 0; }
+</style>
+
+<div class="demo">
+  <h1>Replica demo</h1>
+  <p>
+    Same split as tac_webschool. <code>:writing</code> is the primary.
+    <code>:reading</code> is the replica (<code>replica: true</code> in <code>database.yml</code>).
+    This page does what a 成績表 GET does: it reads, then it writes.
+  </p>
+
+  <section>
+    <div class="actions">
+      <%= link_to "Selector off", replica_demo_path(mode: "off") %>
+      <%= link_to "DatabaseSelector GET", replica_demo_path(mode: "selector") %>
+      <%= button_to "POST, then selector GET", replica_demo_path, method: :post %>
+      <%= link_to "Read on replica, write on primary", replica_demo_path(mode: "split") %>
+    </div>
+  </section>
+
+  <section class="<%= @error ? "result bad" : "result" %>">
+    <% if @mode == "off" %>
+      <p>The selector is off, which is how the branch behaves today. The read and the write both used <code>:writing</code>. The replica was not touched. The hit was saved.</p>
+    <% elsif @mode == "selector" %>
+      <% if @last_write_age && @last_write_age < 2 %>
+        <p>A non-GET stamped <code>session[:last_write]</code> <%= number_with_precision(@last_write_age, precision: 1) %>s ago. That is inside the 2 second window, so this GET used <code>:writing</code>. <code>prevent_writes</code> is still true, so the write is refused.</p>
+      <% else %>
+        <p>No recent non-GET, so this GET used <code>:reading</code> with <code>prevent_writes</code> true. The count ran. The insert did not.</p>
+      <% end %>
+      <% if @error %>
+        <p><strong>ReadOnlyError.</strong> <%= @error.message %></p>
+      <% end %>
+    <% else %>
+      <p>The count ran on <code>:reading</code>. The insert ran on <code>:writing</code>. That is the per-statement split replidog did, and what <code>read_from_replica</code> does for a heavy read that must not include the write.</p>
+    <% end %>
+    <p>Rows visible to the read: <%= @read_count %>. <%= @saved ? "Saved hit #{@saved.id}." : "No hit saved." %></p>
+  </section>
+
+  <section>
+    <h2>SQL in this request</h2>
+    <pre id="sql"><%= @sql.join("\n") %></pre>
+  </section>
+
+  <section>
+    <h2>Recent hits</h2>
+    <ul>
+      <% @hits.each do |hit| %>
+        <li><%= hit.verb %> — <%= hit.note %></li>
+      <% end %>
+    </ul>
+  </section>
+</div>

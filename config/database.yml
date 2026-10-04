@@ -16,11 +16,25 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("PGHOST", "localhost") %>
+  username: <%= ENV.fetch("PGUSER", "postgres") %>
+  password: <%= ENV.fetch("PGPASSWORD", "postgres") %>
+  port: <%= ENV.fetch("PGPORT", 5432) %>
 
 development:
   primary:
     <<: *default
     database: rails_anki8_development
+
+  # Reader. replica: true makes the :reading role refuse writes.
+  # Same database by default, so one Postgres is enough to see ReadOnlyError.
+  # Point PG_REPLICA_HOST at a real reader when you have one.
+  replica:
+    <<: *default
+    database: rails_anki8_development
+    host: <%= ENV.fetch("PG_REPLICA_HOST", ENV.fetch("PGHOST", "localhost")) %>
+    replica: true
+
   queue:
     <<: *default
     database: rails_anki8_development_queue
@@ -61,8 +75,14 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: rails_anki8_test
+  primary:
+    <<: *default
+    database: rails_anki8_test
+  replica:
+    <<: *default
+    database: rails_anki8_test
+    host: <%= ENV.fetch("PG_REPLICA_HOST", ENV.fetch("PGHOST", "localhost")) %>
+    replica: true
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -91,6 +111,10 @@ production:
     username: taylor
     password: <%= ENV["POSTGRES_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] %>
+  replica:
+    <<: *primary_production
+    host: <%= ENV.fetch("PG_REPLICA_HOST") { ENV["DB_HOST"] } %>
+    replica: true
   cache:
     <<: *primary_production
     database: rails_anki8_production_cache
