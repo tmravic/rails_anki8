@@ -24,6 +24,7 @@ default: &default
 development:
   primary:
     <<: *default
+    adapter: postgresql_proxy
     database: rails_anki8_development
 
   # Reader. replica: true makes the :reading role refuse writes.
@@ -77,6 +78,7 @@ development:
 test:
   primary:
     <<: *default
+    adapter: postgresql_proxy
     database: rails_anki8_test
   replica:
     <<: *default
@@ -107,23 +109,28 @@ test:
 production:
   primary: &primary_production
     <<: *default
+    adapter: postgresql_proxy
     database: rails_anki8_production
     username: taylor
     password: <%= ENV["POSTGRES_PASSWORD"] %>
     host: <%= ENV["DB_HOST"] %>
   replica:
     <<: *primary_production
+    adapter: postgresql
     host: <%= ENV.fetch("PG_REPLICA_HOST") { ENV["DB_HOST"] } %>
     replica: true
   cache:
     <<: *primary_production
+    adapter: postgresql
     database: rails_anki8_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
+    adapter: postgresql
     database: rails_anki8_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
+    adapter: postgresql
     database: rails_anki8_production_cable
     migrations_paths: db/cable_migrate

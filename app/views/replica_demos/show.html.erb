@@ -60,6 +60,8 @@
     Same split as tac_webschool. <code>:writing</code> is the primary.
     <code>:reading</code> is the replica (<code>replica: true</code> in <code>database.yml</code>).
     This page does what a 成績表 GET does: it reads, then it writes.
+    DatabaseSelector is still off. The primary adapter is now
+    <code>postgresql_proxy</code>, with <code>proxy_delay</code> 0.
   </p>
 
   <section>
@@ -73,18 +75,18 @@
 
   <section class="<%= @error ? "result bad" : "result" %>">
     <% if @mode == "off" %>
-      <p>The selector is off, which is how the branch behaves today. The read and the write both used <code>:writing</code>. The replica was not touched. The hit was saved.</p>
+      <p>Nothing wrapped this GET. That is the tac_webschool case: DatabaseSelector is off, and the action is not wrapped one block at a time. The proxy sent the count to <code>:reading</code> and the insert to <code>:writing</code>. The hit was saved. <code>proxy_delay</code> 0 means a write does not hold the next SELECT on the primary.</p>
     <% elsif @mode == "selector" %>
-      <% if @last_write_age && @last_write_age < 2 %>
-        <p>A non-GET stamped <code>session[:last_write]</code> <%= number_with_precision(@last_write_age, precision: 1) %>s ago. That is inside the 2 second window, so this GET used <code>:writing</code>. <code>prevent_writes</code> is still true, so the write is refused.</p>
+      <% if @selector_role == :writing %>
+        <p>The POST button stamped <code>session[:last_write]</code> <%= number_with_precision(@last_write_age, precision: 1) %>s ago. tac_webschool does not stamp that key. This page then wrapped the GET as <code>:writing</code> with <code>prevent_writes</code> true, which is what DatabaseSelector does inside its 2 second window. That wrap stays on the proxy. <code>proxy_delay</code> 0 still sent the count to <code>:reading</code>. The insert went to <code>:writing</code> and was saved, because the proxy opens its own writing connection and that connection does not keep the outer <code>prevent_writes</code>.</p>
       <% else %>
-        <p>No recent non-GET, so this GET used <code>:reading</code> with <code>prevent_writes</code> true. The count ran. The insert did not.</p>
+        <p>No recent non-GET, so this page wrapped the GET as <code>:reading</code> with <code>prevent_writes</code> true. That wrap leaves the proxy and uses the replica adapter. The count ran there. The insert was refused. The first button stays on the proxy, and that one does save.</p>
       <% end %>
       <% if @error %>
         <p><strong>ReadOnlyError.</strong> <%= @error.message %></p>
       <% end %>
     <% else %>
-      <p>The count ran on <code>:reading</code>. The insert ran on <code>:writing</code>. That is the per-statement split replidog did, and what <code>read_from_replica</code> does for a heavy read that must not include the write.</p>
+      <p>This button still wraps the count and the insert by hand. The proxy already does that split for the first button, without a wrap. An explicit <code>connected_to</code> still wins over the proxy.</p>
     <% end %>
     <p>Rows visible to the read: <%= @read_count %>. <%= @saved ? "Saved hit #{@saved.id}." : "No hit saved." %></p>
   </section>

@@ -29,6 +29,10 @@ class ReplicaDemosController < ApplicationController
       @read_count = Hit.count
       @saved = Hit.create!(verb: "GET", note: "selector off")
     when "selector"
+      # Imitates DatabaseSelector. It is not the middleware.
+      # :reading leaves the proxy and uses the replica adapter, so the insert raises.
+      # :writing stays on the proxy. The proxy still splits the statements.
+      # Its own writing connection does not keep this prevent_writes flag.
       @selector_role = recent_write? ? :writing : :reading
       ApplicationRecord.connected_to(role: @selector_role, prevent_writes: true) do
         @read_count = Hit.count
