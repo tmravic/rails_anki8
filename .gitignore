@@ -30,6 +30,10 @@
 
 /public/assets
 
+# Files Paperclip writes to disk (Card#image under public/, Card#pdf under assets/).
+/public/image_assets
+/assets
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 

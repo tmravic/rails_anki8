@@ -22,6 +22,12 @@ gem "jbuilder"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
+# File attachments the way tac_webschool master used them (paperclip 6.0.0 on Rails 5.1).
+# The original paperclip gem calls URI.escape, which Ruby 3 removed, so this is
+# kt-paperclip: the maintained fork with the same API (has_attached_file etc.).
+# Needs ImageMagick (convert, identify) and the `file` command on the machine.
+gem "kt-paperclip", "~> 8.0.0"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
