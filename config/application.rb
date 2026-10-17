@@ -38,5 +38,8 @@ module RailsAnki8
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Rails 8 defaults to libvips. This machine and tac_webschool have ImageMagick.
+    config.active_storage.variant_processor = :mini_magick
   end
 end
